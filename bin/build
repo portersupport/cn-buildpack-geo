@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "---> geo Buildpack"
+
+# GET ARGS
+LAYERS_DIR="$1"
+
+# bin directory
+BIN_DIR=$(cd $(dirname $0); pwd)
+
+# geo layer
+GEO_LAYER="${LAYERS_DIR}/geo"
+mkdir -p $GEO_LAYER
+
+# geo profile path
+GEO_PROFILE_PATH="$GEO_LAYER/profile.d/geo.sh"
+mkdir -p $(dirname $GEO_PROFILE_PATH)
+
+# gdal layer
+GDAL_LAYER="${LAYERS_DIR}/gdal"
+mkdir -p $GDAL_LAYER
+
+# gdal profile path
+GDAL_PROFILE_PATH="$GDAL_LAYER/profile.d/gdal.sh"
+mkdir -p $(dirname $GDAL_PROFILE_PATH)
+
+# proj layer
+PROJ_LAYER="${LAYERS_DIR}/proj"
+mkdir -p $PROJ_LAYER
+
+# proj profile path
+PROJ_PROFILE_PATH="$PROJ_LAYER/profile.d/proj.sh"
+mkdir -p $(dirname $PROJ_PROFILE_PATH)
+
+# source helper bash functions
+source $BIN_DIR/support/bash_functions.sh
+
+# geo URL
+GEO_URL="https://s3.us-east-2.amazonaws.com/speedyrails-public/cnb/geos-3.6.1.tar.xz"
+
+# gdal URL
+GDAL_URL="https://s3.us-east-2.amazonaws.com/speedyrails-public/cnb/gdal-2.1.3.tar.xz"
+
+# proj URL
+PROJ_URL="https://s3.us-east-2.amazonaws.com/speedyrails-public/cnb/proj-4.9.3.tar.xz"
+
+# Set the layers to be included in the final image
+echo "launch = true" > $GEO_LAYER.toml
+echo "build = true" >> $GEO_LAYER.toml
+echo "launch = true" > $GDAL_LAYER.toml
+echo "build = true" >> $GDAL_LAYER.toml
+echo "launch = true" > $PROJ_LAYER.toml
+echo "build = true" >> $PROJ_LAYER.toml
+
+# Download the geo vendors
+for pkg_name in geo gdal proj; do
+    PKG_URL="${pkg_name^^}_URL"
+    DEST="${pkg_name^^}_LAYER"
+    eval download_package $pkg_name \$$PKG_URL \$$DEST
+done
+
+# Set environment variables for geos vendors
+echo "export GEOS_LIBRARY_PATH=\"$GEO_LAYER/lib\"" >> $GEO_PROFILE_PATH
+echo "export GDAL_LIBRARY_PATH=\"$GDAL_LAYER/lib\"" >> $GDAL_PROFILE_PATH
+echo "export PROJ4_LIBRARY_PATH=\"$PROJ_LAYER/lib\"" >> $PROJ_PROFILE_PATH
+echo "export GDAL_DATA=\"$GDAL_LAYER/share/gdal\"" >> $GDAL_PROFILE_PATH
+echo "export BUNDLE_BUILD__RGEO=\"--with-opt-dir=$GEO_LAYER --with-geos-config=$GEO_LAYER/bin/geos-config\"" >> $GEO_PROFILE_PATH
+# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GEO_LAYER/lib\"" >> $GEO_PROFILE_PATH
+# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GDAL_LAYER/lib\"" >> $GDAL_PROFILE_PATH
+# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$PROJ_LAYER/lib\"" >> $PROJ_PROFILE_PATH
+# echo "export CPATH=\"\$CPATH:$GEO_LAYER/include\"" >> $GEO_PROFILE_PATH
+# echo "export CPATH=\"\$CPATH:$GDAL_LAYER/include\"" >> $GDAL_PROFILE_PATH
+# echo "export CPATH=\"\$CPATH:$PROJ_LAYER/include\"" >> $PROJ_PROFILE_PATH
+
+echo "---> Done"
