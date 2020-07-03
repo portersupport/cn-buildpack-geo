@@ -66,11 +66,11 @@ echo "export GDAL_LIBRARY_PATH=\"$GDAL_LAYER/lib\"" >> $GDAL_PROFILE_PATH
 echo "export PROJ4_LIBRARY_PATH=\"$PROJ_LAYER/lib\"" >> $PROJ_PROFILE_PATH
 echo "export GDAL_DATA=\"$GDAL_LAYER/share/gdal\"" >> $GDAL_PROFILE_PATH
 echo "export BUNDLE_BUILD__RGEO=\"--with-opt-dir=$GEO_LAYER --with-geos-config=$GEO_LAYER/bin/geos-config\"" >> $GEO_PROFILE_PATH
-# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GEO_LAYER/lib\"" >> $GEO_PROFILE_PATH
-# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GDAL_LAYER/lib\"" >> $GDAL_PROFILE_PATH
-# echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$PROJ_LAYER/lib\"" >> $PROJ_PROFILE_PATH
-# echo "export CPATH=\"\$CPATH:$GEO_LAYER/include\"" >> $GEO_PROFILE_PATH
-# echo "export CPATH=\"\$CPATH:$GDAL_LAYER/include\"" >> $GDAL_PROFILE_PATH
-# echo "export CPATH=\"\$CPATH:$PROJ_LAYER/include\"" >> $PROJ_PROFILE_PATH
+echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GEO_LAYER/lib\"" >> $GEO_PROFILE_PATH
+echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$GDAL_LAYER/lib\"" >> $GDAL_PROFILE_PATH
+echo "export LIBRARY_PATH=\"\$LIBRARY_PATH:$PROJ_LAYER/lib\"" >> $PROJ_PROFILE_PATH
+echo "export CPATH=\"\$CPATH:$GEO_LAYER/include\"" >> $GEO_PROFILE_PATH
+echo "export CPATH=\"\$CPATH:$GDAL_LAYER/include\"" >> $GDAL_PROFILE_PATH
+echo "export CPATH=\"\$CPATH:$PROJ_LAYER/include\"" >> $PROJ_PROFILE_PATH
 
 echo "---> Done"
