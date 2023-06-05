@@ -9,7 +9,6 @@ name = "geo Cloud Native Buildpack"
 
 # Stacks that the buildpack will work with
 [[stacks]]
-id = "heroku-18"
 id = "heroku-20"
 
 [[stacks]]
